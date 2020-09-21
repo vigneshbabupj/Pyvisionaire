@@ -1,6 +1,6 @@
 from setuptools import setup
 
-with open('README.md', 'r', encoding='utf8') as fh:
+with open('readme.md', 'r', encoding='utf8') as fh:
     long_description = fh.read()
 
 with open('requirements.txt', 'r') as fh:
@@ -10,7 +10,7 @@ with open('requirements.txt', 'r') as fh:
 setup(
     # Needed to silence warnings (and to be a worthwhile package)
     name='Visionaire',
-    url='https://github.com/jladan/package_demo',
+    url='https://github.com/vigneshbabupj/Pyvisionaire',
     author='Vignesh Babu P J',
     author_email='vigneshbabupj@gmail.com',
 
