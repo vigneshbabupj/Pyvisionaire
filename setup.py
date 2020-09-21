@@ -18,16 +18,24 @@ setup(
     packages=setuptools.find_packages()
     
     python_requires='>=3.6'
+    
     # Needed for dependencies
     install_requires=required,
     include_package_data=True,
     
     # *strongly* suggested for sharing
-    version='0.0.1',
+    version="0.1",
     # The license can be anything you like
     license='MIT',
     description='Extensive vision AI package',
    
     long_description=long_description,
     long_description_content_type="text/markdown",
+    
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
+    
 )
