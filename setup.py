@@ -15,7 +15,7 @@ setup(
     author_email='vigneshbabupj@gmail.com',
 
     # Needed to actually package something
-    packages=setuptools.find_packages()
+    packages=['Visionaire'],
     
     python_requires='>=3.6'
     
