@@ -17,7 +17,7 @@ setup(
     # Needed to actually package something
     packages=['Visionaire'],
     
-    python_requires='>=3.6'
+    python_requires='>=3.6',
     
     # Needed for dependencies
     install_requires=required,
