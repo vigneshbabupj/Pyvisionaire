@@ -68,7 +68,7 @@ def incorrect_images(model, device, test_loader):
 
 
 
-def incorrect_Classification(model,classes test_loader,device, savefig = False, *save_dir):
+def incorrect_Classification(model,classes,test_loader,device, savefig = False, *save_dir):
 
 
   incorrect = incorrect_images(model, device, test_loader)
