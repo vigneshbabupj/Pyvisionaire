@@ -9,9 +9,24 @@ Original file is located at
 
 import torch 
 from torchvision import datasets, transforms
+import numpy as np
 
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
+
+
+
+class AlbumentationImageDataset():
+  def __init__(self,transform):
+      #self.image_list = image_list
+      self.aug = transform
+
+  def __call__(self, img):
+    img = np.array(img)
+
+    return self.aug(image=img)['image']
+        
+
 
 def MNIST_dataloader(Batch_size, use_cuda):
     
@@ -59,11 +74,11 @@ def MNIST_dataloader(Batch_size, use_cuda):
     #Get the MNIST dataset
 
     train_dataset =  datasets.MNIST('/data/', train=True, download=True,
-                              transform=train_transforms)
+                              transform=AlbumentationImageDataset(train_transforms))
 
 
     test_dataset =  datasets.MNIST('/data/', train=False, download=True,
-                              transform=test_transforms) 
+                              transform=AlbumentationImageDataset(test_transforms)) 
 
 
     dataloader_args= dict(shuffle=True, batch_size=Batch_size,num_workers=4, pin_memory=True ) if use_cuda else dict(shuffle=True, batch_size=Batch_size)
@@ -132,11 +147,11 @@ def CIFAR10_dataloader(Batch_size, use_cuda):
     #Get the CIFAR10 dataset
 
     train_dataset =  datasets.CIFAR10('/data/', train=True, download=True,
-                              transform=train_transforms(image=np.array(image))['image'])
+                              transform=AlbumentationImageDataset(train_transforms))
 
 
     test_dataset =  datasets.CIFAR10('/data/', train=False, download=True,
-                              transform=test_transforms(image=np.array(image))['image']) 
+                              transform=AlbumentationImageDataset(test_transforms))
 
 
     dataloader_args= dict(shuffle=True, batch_size=Batch_size,num_workers=4, pin_memory=True ) if use_cuda else dict(shuffle=True, batch_size=Batch_size)
