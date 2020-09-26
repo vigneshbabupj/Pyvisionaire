@@ -132,11 +132,11 @@ def CIFAR10_dataloader(Batch_size, use_cuda):
     #Get the CIFAR10 dataset
 
     train_dataset =  datasets.CIFAR10('/data/', train=True, download=True,
-                              transform=train_transforms)
+                              transform=train_transforms(image=np.array(image))['image'])
 
 
     test_dataset =  datasets.CIFAR10('/data/', train=False, download=True,
-                              transform=test_transforms) 
+                              transform=test_transforms(image=np.array(image))['image']) 
 
 
     dataloader_args= dict(shuffle=True, batch_size=Batch_size,num_workers=4, pin_memory=True ) if use_cuda else dict(shuffle=True, batch_size=Batch_size)
