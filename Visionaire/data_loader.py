@@ -110,7 +110,7 @@ def CIFAR10_dataloader(Batch_size, use_cuda):
 
     # Train Phase transformations Albumentations
     train_transforms = A.Compose([
-                                  A.HorizontalFlip(),
+                                  A.HorizontalFlip(p=0.5),
                                   A.Normalize(
                                       mean= mean,
                                       std=std,
