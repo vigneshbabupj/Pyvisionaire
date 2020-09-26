@@ -121,7 +121,8 @@ def plot_performace(train_acc,test_acc,train_losses,test_losses):
     plt.show()
     
     
-def class_accuracy(num_class,classes,model,test_loader,device):
+def class_accuracy(classes,model,test_loader,device):
+  num_class = len(classes)
   class_correct = list(0. for i in range(num_class))
   class_total = list(0. for i in range(num_class))
   with torch.no_grad():
@@ -136,7 +137,7 @@ def class_accuracy(num_class,classes,model,test_loader,device):
         class_correct[label] += c[i].item()
         class_total[label] += 1
   
-  for i in range(10):
+  for i in range(num_class):
     print('Accuracy of %5s : %2d %%' % (
             classes[i], 100 * class_correct[i] / class_total[i]))
  
