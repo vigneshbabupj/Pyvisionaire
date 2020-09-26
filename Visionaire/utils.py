@@ -22,7 +22,6 @@ from torchvision import transforms
 import numpy as np
 
 
-
 '''
 #data Statistics
 train = train_dataset.train_data
@@ -112,7 +111,7 @@ def plot_performace(train_acc,test_acc,train_losses,test_losses):
     fig, axs = plt.subplots(2,2,figsize=(15,10))
     axs[0, 0].plot(train_losses)
     axs[0, 0].set_title("Training Loss",color='red')
-    axs[1, 0].plot(train_acc[4000:])
+    axs[1, 0].plot(train_acc)
     axs[1, 0].set_title("Training Accuracy",color='red')
     axs[0, 1].plot(test_losses)
     axs[0, 1].set_title("Test Loss",color='red')
@@ -122,13 +121,13 @@ def plot_performace(train_acc,test_acc,train_losses,test_losses):
     plt.show()
     
     
-def class_accuracy(num_class,model,test_loader,device):
+def class_accuracy(num_class,classes,model,test_loader,device):
   class_correct = list(0. for i in range(num_class))
   class_total = list(0. for i in range(num_class))
   with torch.no_grad():
     for data in test_loader:
       images, labels = data
-      images, labels = images.to(device), labels.to(device) 
+      images, labels = images.to(device), labels.to(device)
       outputs = model(images)
       _, predicted = torch.max(outputs, 1)
       c = (predicted == labels).squeeze()
