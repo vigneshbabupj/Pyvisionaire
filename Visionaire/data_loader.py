@@ -29,51 +29,51 @@ def MNIST_dataloader(Batch_size, use_cuda):
 
    
 
-  # Train Phase transformations
-  # train_transforms = transforms.Compose([
-  #                                      #  transforms.Resize((28, 28)),
-  #                                      #  transforms.ColorJitter(brightness=0.10, contrast=0.1, saturation=0.10, hue=0.1),
-  #                                      transforms.RandomRotation((-7.0, 7.0), fill=(1,)),
-  #                                      transforms.ToTensor(),
-  #                                      transforms.Normalize((0.1307,), (0.3081,)) # The mean and std have to be sequences (e.g., tuples), therefore you should add a comma after the values. 
-  #                                      # Note the difference between (0.1307) and (0.1307,)
-  #                                      ])
+    # Train Phase transformations
+    # train_transforms = transforms.Compose([
+    #                                      #  transforms.Resize((28, 28)),
+    #                                      #  transforms.ColorJitter(brightness=0.10, contrast=0.1, saturation=0.10, hue=0.1),
+    #                                      transforms.RandomRotation((-7.0, 7.0), fill=(1,)),
+    #                                      transforms.ToTensor(),
+    #                                      transforms.Normalize((0.1307,), (0.3081,)) # The mean and std have to be sequences (e.g., tuples), therefore you should add a comma after the values. 
+    #                                      # Note the difference between (0.1307) and (0.1307,)
+    #                                      ])
                                         
                                         
-  test_transforms = A.Compose([A.Normalize(
+    test_transforms = A.Compose([A.Normalize(
                                       mean=mean,
                                       std=std,
                                       ),
                                   ToTensorV2()
                                   ])
 
-  # Test Phase transformations
-  # test_transforms = transforms.Compose([
-  #                                      #  transforms.Resize((28, 28)),
-  #                                      #  transforms.ColorJitter(brightness=0.10, contrast=0.1, saturation=0.10, hue=0.1),
-  #                                      transforms.ToTensor(),
-  #                                      transforms.Normalize((0.1307,), (0.3081,))
-  #                                      ])
+    # Test Phase transformations
+    # test_transforms = transforms.Compose([
+    #                                      #  transforms.Resize((28, 28)),
+    #                                      #  transforms.ColorJitter(brightness=0.10, contrast=0.1, saturation=0.10, hue=0.1),
+    #                                      transforms.ToTensor(),
+    #                                      transforms.Normalize((0.1307,), (0.3081,))
+    #                                      ])
 
 
-  #Get the MNIST dataset
+    #Get the MNIST dataset
 
-  train_dataset =  datasets.MNIST('/data/', train=True, download=True,
+    train_dataset =  datasets.MNIST('/data/', train=True, download=True,
                               transform=train_transforms)
 
 
-  test_dataset =  datasets.MNIST('/data/', train=False, download=True,
+    test_dataset =  datasets.MNIST('/data/', train=False, download=True,
                               transform=test_transforms) 
-  
-    
-  dataloader_args= dict(shuffle=True, batch_size=Batch_size,num_workers=4, pin_memory=True ) if use_cuda else dict(shuffle=True, batch_size=Batch_size)
-
-  train_loader = torch.utils.data.DataLoader(train_dataset, **dataloader_args)
-
-  test_loader = torch.utils.data.DataLoader(test_dataset, **dataloader_args)
 
 
-  return train_loader,test_loader
+    dataloader_args= dict(shuffle=True, batch_size=Batch_size,num_workers=4, pin_memory=True ) if use_cuda else dict(shuffle=True, batch_size=Batch_size)
+
+    train_loader = torch.utils.data.DataLoader(train_dataset, **dataloader_args)
+
+    test_loader = torch.utils.data.DataLoader(test_dataset, **dataloader_args)
+
+
+    return train_loader,test_loader
 
 def CIFAR10_dataloader(Batch_size, use_cuda):
 
@@ -129,24 +129,24 @@ def CIFAR10_dataloader(Batch_size, use_cuda):
                                   ])
 
 
-  #Get the CIFAR10 dataset
+    #Get the CIFAR10 dataset
 
-  train_dataset =  datasets.CIFAR10('/data/', train=True, download=True,
+    train_dataset =  datasets.CIFAR10('/data/', train=True, download=True,
                               transform=train_transforms)
 
 
-  test_dataset =  datasets.CIFAR10('/data/', train=False, download=True,
+    test_dataset =  datasets.CIFAR10('/data/', train=False, download=True,
                               transform=test_transforms) 
-  
-   
-  dataloader_args= dict(shuffle=True, batch_size=Batch_size,num_workers=4, pin_memory=True ) if use_cuda else dict(shuffle=True, batch_size=Batch_size)
 
-  train_loader = torch.utils.data.DataLoader(train_dataset, **dataloader_args)
 
-  test_loader = torch.utils.data.DataLoader(test_dataset, **dataloader_args)
+    dataloader_args= dict(shuffle=True, batch_size=Batch_size,num_workers=4, pin_memory=True ) if use_cuda else dict(shuffle=True, batch_size=Batch_size)
 
-  classes = ('plane', 'car', 'bird', 'cat',
+    train_loader = torch.utils.data.DataLoader(train_dataset, **dataloader_args)
+
+    test_loader = torch.utils.data.DataLoader(test_dataset, **dataloader_args)
+
+    classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
 
-  return train_loader,test_loader, classes
+    return train_loader,test_loader, classes
