@@ -16,7 +16,9 @@ import torch.nn.functional as F
 import torch.optim as optim
 
 #import import_ipynb
-import eva_regularization as rg
+#import eva_regularization as rg
+from Visionaire import regularization as rg
+
 
 def train(model, device, train_loader, optimizer, lambda_l1,criterion):
   model.train()
