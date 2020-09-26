@@ -19,6 +19,8 @@ import matplotlib.pyplot as plt
 
 from torchvision import transforms
 
+import numpy as np
+
 
 
 '''
