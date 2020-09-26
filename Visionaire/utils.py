@@ -106,7 +106,7 @@ def incorrect_Classification(model,classes,test_loader,device, savefig = False, 
   plt.show()
   
   
-def plot_performace(train_acc,test_acc,train_losses,test_losses):
+def plot_performace(train_acc,test_acc,train_losses,test_losses,savefig = False, *save_dir):
 
     fig, axs = plt.subplots(2,2,figsize=(15,10))
     axs[0, 0].plot(train_losses)
@@ -118,6 +118,10 @@ def plot_performace(train_acc,test_acc,train_losses,test_losses):
     axs[1, 1].plot(test_acc)
     axs[1, 1].set_title("Test Accuracy",color='red')
     plt.tight_layout()
+    
+    if savefig:
+        plt.savefig(save_dir+'model_performance.jpg', dpi=300, bbox_inches='tight')
+    
     plt.show()
     
     
