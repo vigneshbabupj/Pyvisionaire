@@ -12,7 +12,8 @@ from torchvision import datasets, transforms
 import numpy as np
 
 import albumentations as A
-from albumentations.pytorch import ToTensorV2
+#from albumentations.pytorch import ToTensorV2
+from albumentations.pytorch.transforms import ToTensor
 
 
 
@@ -39,7 +40,8 @@ def MNIST_dataloader(Batch_size, use_cuda):
                                       mean= mean,
                                       std=std,
                                       ),
-                                  ToTensorV2()
+                                  #ToTensorV2()
+                                  ToTensor()
                                   ])
 
    
@@ -59,7 +61,8 @@ def MNIST_dataloader(Batch_size, use_cuda):
                                       mean=mean,
                                       std=std,
                                       ),
-                                  ToTensorV2()
+                                  #ToTensorV2()
+                                  ToTensor()
                                   ])
 
     # Test Phase transformations
@@ -116,7 +119,8 @@ def CIFAR10_dataloader(Batch_size, use_cuda):
                                       std=std,
                                       ),
                                   A.Cutout ( num_holes=1, max_h_size=16, max_w_size=16,  fill_value= mean, always_apply=False, p=0.5),
-                                  ToTensorV2()
+                                  #ToTensorV2()
+                                  ToTensor()
                                   ])
 
 
@@ -140,7 +144,8 @@ def CIFAR10_dataloader(Batch_size, use_cuda):
                                       mean=mean,
                                       std=std,
                                       ),
-                                  ToTensorV2()
+                                  #ToTensorV2()
+                                  ToTensor()
                                   ])
 
 
