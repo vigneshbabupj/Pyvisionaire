@@ -145,7 +145,7 @@ def show_cam_on_image(img, mask):
     # plt.show()
     return superimposed_img
 
-def plot_grad_cam_all_layers(model,classes,train_loader,device,num_img,savefig=False,*save_dir):
+def plot_grad_cam_all_layers(model,classes,test_loader,device,num_img,savefig=False,*save_dir):
 
   """
   Generate Grad-CAM at different layers of model for random 5 miscalssified images
@@ -242,7 +242,7 @@ def plot_grad_cam_all_layers(model,classes,train_loader,device,num_img,savefig=F
   
  
 
-def plot_grad_cam_last_layer(model,classes,train_loader,device,num_img,savefig=False,*save_dir):
+def plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig=False,*save_dir):
 
   """
   Generate Grad-CAM at final layers of model
@@ -345,9 +345,9 @@ def plot_grad_cam_last_layer(model,classes,train_loader,device,num_img,savefig=F
   
   
   
-def plot_grad_cam(model,classes,train_loader,device,num_img,savefig=False,*save_dir):
+def plot_grad_cam(model,classes,test_loader,device,num_img,savefig=False,*save_dir):
   # if no of images is less than 5 print grad came for all layers else only last layer
   if num_img > 5:
-    plot_grad_cam_last_layer(model,classes,train_loader,device,num_img,savefig,save_dir)
+    plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig,save_dir)
   else:
-    plot_grad_cam_all_layers(model,classes,train_loader,device,num_img,savefig,save_dir)
+    plot_grad_cam_all_layers(model,classes,test_loader,device,num_img,savefig,save_dir)
