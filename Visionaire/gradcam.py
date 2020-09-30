@@ -236,7 +236,7 @@ def plot_grad_cam_all_layers(model,classes,test_loader,device,num_img,savefig=Fa
   #plt.subplots_adjust(wspace=0, hspace=0.2, left=0, bottom=0, top=1)
 
   if savefig:
-    plt.savefig(save_dir+'grad_cam_image.jpg', dpi=300, bbox_inches='tight')
+    plt.savefig(save_dir[0]+'grad_cam_image.jpg', dpi=300, bbox_inches='tight')
   plt.show()
   
   
@@ -339,7 +339,7 @@ def plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig=Fa
       r+=1
 
   if savefig:
-     plt.savefig(save_dir+'grad_cam_image_last_layer.jpg', dpi=300, bbox_inches='tight')
+     plt.savefig(save_dir[0]+'grad_cam_image_last_layer.jpg', dpi=300, bbox_inches='tight')
   
   plt.show()
   
