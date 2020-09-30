@@ -338,7 +338,7 @@ def plot_grad_cam_last_layer(model,classes,train_loader,device,num_img,savefig=F
       c=0
       r+=1
 
-   if savefig:
+  if savefig:
      plt.savefig(save_dir+'grad_cam_image_last_layer.jpg', dpi=300, bbox_inches='tight')
   
   plt.show()
