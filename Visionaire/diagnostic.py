@@ -102,7 +102,7 @@ def incorrect_Classification(model,classes,test_loader,device, savefig = False, 
     plt.tight_layout()
 
   if savefig:
-    plt.savefig(save_dir+'incorrect_images.jpg', dpi=300, bbox_inches='tight')
+    plt.savefig(save_dir[0]+'incorrect_images.jpg', dpi=300, bbox_inches='tight')
 
   plt.show()
   
@@ -121,7 +121,7 @@ def plot_performace(train_acc,test_acc,train_losses,test_losses,savefig = False,
     plt.tight_layout()
     
     if savefig:
-        plt.savefig(save_dir+'model_performance.jpg', dpi=300, bbox_inches='tight')
+        plt.savefig(save_dir[0]+'model_performance.jpg', dpi=300, bbox_inches='tight')
     
     plt.show()
     
