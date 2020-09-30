@@ -85,7 +85,8 @@ def incorrect_Classification(model,classes,test_loader,device, savefig = False, 
   )
 
 
-  fig = plt.figure(figsize=(15,10))
+  #fig = plt.figure(figsize=(15,10))
+  fig,ax = plt.subplots(nrows = 5, ncols = 5,figsize=(15,10))
 
   for i in range(25):
     plt.subplot(5,5,i+1)
