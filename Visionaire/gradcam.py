@@ -348,6 +348,6 @@ def plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig=Fa
 def plot_grad_cam(model,classes,test_loader,device,num_img,savefig=False,*save_dir):
   # if no of images is less than 5 print grad came for all layers else only last layer
   if num_img > 5:
-    plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig,save_dir)
+    plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig,save_dir[0])
   else:
-    plot_grad_cam_all_layers(model,classes,test_loader,device,num_img,savefig,save_dir)
+    plot_grad_cam_all_layers(model,classes,test_loader,device,num_img,savefig,save_dir[0])
