@@ -255,7 +255,7 @@ def plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig=Fa
 
   # The four residual layers
   #target_layers = ["layer1", "layer2", "layer3", "layer4"]
-  target_layers = ["layer4"]
+  target_layer = ["layer4"]
 
 
   incorrect = incorrect_images(model, device, test_loader)
