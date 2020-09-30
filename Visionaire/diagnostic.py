@@ -55,7 +55,7 @@ def incorrect_images(model, device, test_loader):
       pred = output.data.max(1, keepdim=True)[1]
       correct += pred.eq(target.data.view_as(pred)).sum().item()
       
-      idxs_mask = (pred.eq(target.data.view_as(pred))==False).nonzero() ## store incorrect images
+      idxs_mask = (pred.eq(target.data.view_as(pred))==False).nonzero(as_tuple=False) ## store incorrect images
 
       for id in idxs_mask:
         incorrect_examples.append(data[id[0].item()])

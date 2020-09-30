@@ -20,8 +20,13 @@ import copy
 import click
 import cv2
 
+from PIL import Image
+
 # %matplotlib inline
 import matplotlib.pyplot as plt
+
+from Visionaire.diagnostic import incorrect_images
+
 
 class _BaseWrapper(object):
     def __init__(self, model):
@@ -140,31 +145,32 @@ def show_cam_on_image(img, mask):
     # plt.show()
     return superimposed_img
 
-def plot_grad_cam(model,classes,train_loader,device,savefig=False,*save_dir):
+def plot_grad_cam_all_layers(model,classes,train_loader,device,num_img,savefig=False,*save_dir):
 
   """
-  Generate Grad-CAM at different layers of model
+  Generate Grad-CAM at different layers of model for random 5 miscalssified images
   """
   # Model
-  #model = models.resnet152(pretrained=True)
   model.to(device)
   model.eval()
 
   # The four residual layers
   target_layers = ["layer1", "layer2", "layer3", "layer4"]
 
-
   # Images
   #images, raw_images = load_images(image_paths)
   #images = torch.stack(images).to(device)
 
   # get some random training images
-  dataiter = iter(train_loader)
-  images, labels = dataiter.next()
-  images = images.to(device)
-  labels = labels.to(device)
-
-
+  #dataiter = iter(train_loader)
+  #images, labels = dataiter.next()
+  #images = images.to(device)
+  #labels = labels.to(device)
+  
+  incorrect = incorrect_images(model, device, test_loader)
+  incorrect_examples = incorrect['images']
+  incorrect_pred = incorrect['Pred']
+  incorrect_target = incorrect['target']
 
   inv_normalize = transforms.Normalize(
     mean=[-0.4890062/0.264582, -0.47970363/0.258996, -0.47680542/0.25643882],
@@ -180,6 +186,8 @@ def plot_grad_cam(model,classes,train_loader,device,savefig=False,*save_dir):
   sample_images = images[:5]
   sample_raw_img = raw_images[:5]
   sample_target_class = labels[:5]
+  sample_pred = incorrect_pred[:5]
+  
   # gcam = GradCAM(model=model)
   # probs, ids = gcam.forward(images)
   # ids_ = torch.LongTensor([[target_class]] * len(images)).to(device)
@@ -211,7 +219,7 @@ def plot_grad_cam(model,classes,train_loader,device,savefig=False,*save_dir):
 
     raw_img = np.transpose(raw_images[id].cpu().numpy(), (1, 2, 0)).squeeze()
     ax[id,0].imshow(raw_img)
-    ax[id,0].set_title(f" Predicted:{classes[ids[id][0]]} \n Target:{classes[sample_target_class[id]]}",color='red')
+    ax[id,0].set_title(f" Predicted:{classes[ids_[id][0]]} \n Target:{classes[sample_target_class[id]]}",color='red')
     ax[id,0].axis('off')
 
     disp_img.append(raw_img)
@@ -230,3 +238,116 @@ def plot_grad_cam(model,classes,train_loader,device,savefig=False,*save_dir):
   if savefig:
     plt.savefig(save_dir+'grad_cam_image.jpg', dpi=300, bbox_inches='tight')
   plt.show()
+  
+  
+ 
+
+def plot_grad_cam_last_layer(model,classes,train_loader,device,num_img,savefig=False,*save_dir):
+
+  """
+  Generate Grad-CAM at final layers of model
+  for only the last image
+  """
+  # Model
+  #model = models.resnet152(pretrained=True)
+  model.to(device)
+  model.eval()
+
+  # The four residual layers
+  #target_layers = ["layer1", "layer2", "layer3", "layer4"]
+  target_layers = ["layer4"]
+
+
+  incorrect = incorrect_images(model, device, test_loader)
+  incorrect_examples = incorrect['images']
+  incorrect_pred = incorrect['Pred']
+  incorrect_target = incorrect['target']
+
+  inv_normalize = transforms.Normalize(
+    mean=[-0.4890062/0.264582, -0.47970363/0.258996, -0.47680542/0.25643882],
+    std=[1/0.264582, 1/0.258996, 1/0.25643882]
+  )
+
+
+  raw_images =[inv_normalize(im) for im in incorrect_examples]
+
+
+
+
+  sample_images = incorrect_examples[:num_img]
+  sample_raw_img = raw_images[:num_img]
+  sample_target_class = incorrect_target[:num_img]
+  sample_pred = incorrect_pred[:num_img]
+
+  # gcam = GradCAM(model=model)
+  # probs, ids = gcam.forward(images)
+  # ids_ = torch.LongTensor([[target_class]] * len(images)).to(device)
+  # gcam.backward(ids=ids_)
+
+
+  fig,ax = plt.subplots(nrows = 5, ncols = 5,figsize=(15,10),constrained_layout=True)
+
+  gcam = GradCAM(model=model)
+
+  sample_images = torch.stack(sample_images).to(device)
+  sample_pred = torch.LongTensor(sample_pred).to(device)
+
+  probs, ids = gcam.forward(sample_images)
+  #ids_ = torch.LongTensor([[sample_target_class]] * len(sample_images)).to(device)
+  ids_ = sample_pred.view(len(sample_images), -1).to(device)
+  gcam.backward(ids=ids_)
+
+  regions = gcam.generate(target_layer=target_layer[0])
+
+
+
+
+  disp_img = []
+  r,c = 0,0
+
+  for id in range(len(sample_images)):
+    stack_img=[]
+
+    raw_img = (np.transpose(raw_images[id].cpu().numpy(), (1, 2, 0)).squeeze()*255).astype(np.uint8)
+
+    stack_img.append(Image.fromarray(raw_img))
+
+    cam_img = show_cam_on_image(raw_img,regions[id,0].cpu().numpy())
+
+    stack_img.append(Image.fromarray(cam_img))
+
+    total_width = sum([cam_img.shape[0],raw_img.shape[0]])
+    max_height = max([cam_img.shape[1],raw_img.shape[1]])
+
+    new_im = Image.new('RGB', (total_width, max_height))
+
+    x_offset = 0
+    for im in stack_img:
+      new_im.paste(im, (x_offset,0))
+      x_offset += im.size[0]
+
+    disp_img.append(new_im)
+    
+    ax[r,c].imshow(new_im)#,interpolation='bilinear')
+    ax[r,c].set_title(f" Predicted:{classes[ids_[id][0]]} Target:{classes[sample_target_class[id]]}",color='red')
+    ax[r,c].axis('off')
+
+    c+=1
+
+    if c==5:
+      c=0
+      r+=1
+
+   if savefig:
+     plt.savefig(save_dir+'grad_cam_image_last_layer.jpg', dpi=300, bbox_inches='tight')
+  
+  plt.show()
+  
+  
+  
+def plot_grad_cam(model,classes,train_loader,device,num_img,savefig=False,*save_dir):
+  # if no of images is less than 5 print grad came for all layers else only last layer
+  if num_img > 5:
+    plot_grad_cam_last_layer(model,classes,train_loader,device,num_img,savefig,save_dir)
+  else:
+    plot_grad_cam_all_layers(model,classes,train_loader,device,num_img,savefig,save_dir)
