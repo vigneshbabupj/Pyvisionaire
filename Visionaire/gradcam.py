@@ -136,11 +136,11 @@ class GradCAM(_BaseWrapper):
 def show_cam_on_image(img, mask):
 
     heatmap = np.uint8(255 * mask)
-    heatmap_img = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+    heatmap_img = cv2.applyColorMap(heatmap, cv2.COLORMAP_RAINBOW)
 
     #print(img.size)
     #print(heatmap_img.size)
-    superimposed_img = cv2.addWeighted((img* 255).astype(np.uint8), 0.8, heatmap_img, 0.3, 0)
+    superimposed_img = cv2.addWeighted(img, 0.8, heatmap_img, 0.4, 0)
     # plt.imshow(superimposed_img)
     # plt.show()
     return superimposed_img
@@ -181,8 +181,6 @@ def plot_grad_cam_all_layers(model,classes,test_loader,device,num_img,savefig=Fa
   raw_images =[inv_normalize(im) for im in images]
 
 
-
-
   sample_images = images[:5]
   sample_raw_img = raw_images[:5]
   sample_target_class = labels[:5]
@@ -197,6 +195,11 @@ def plot_grad_cam_all_layers(model,classes,test_loader,device,num_img,savefig=Fa
   fig,ax = plt.subplots(nrows = 5, ncols = 5,figsize=(15,10))
 
   gcam = GradCAM(model=model)
+  
+  
+  sample_images = torch.stack(sample_images).to(device)
+  sample_pred = torch.LongTensor(sample_pred).to(device)
+  sample_target_class = torch.LongTensor(sample_target_class).to(device)
 
   probs, ids = gcam.forward(sample_images)
   #ids_ = torch.LongTensor([[sample_target_class]] * len(sample_images)).to(device)
@@ -272,8 +275,6 @@ def plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig=Fa
   raw_images =[inv_normalize(im) for im in incorrect_examples]
 
 
-
-
   sample_images = incorrect_examples[:num_img]
   sample_raw_img = raw_images[:num_img]
   sample_target_class = incorrect_target[:num_img]
@@ -291,18 +292,15 @@ def plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig=Fa
 
   sample_images = torch.stack(sample_images).to(device)
   sample_pred = torch.LongTensor(sample_pred).to(device)
+  sample_target_class = torch.LongTensor(sample_target_class).to(device)
 
   probs, ids = gcam.forward(sample_images)
   #ids_ = torch.LongTensor([[sample_target_class]] * len(sample_images)).to(device)
-  ids_ = sample_pred.view(len(sample_images), -1).to(device)
+  ids_ = sample_target_class.view(len(sample_images), -1).to(device)
   gcam.backward(ids=ids_)
 
   regions = gcam.generate(target_layer=target_layer[0])
 
-
-
-
-  disp_img = []
   r,c = 0,0
 
   for id in range(len(sample_images)):
@@ -316,19 +314,19 @@ def plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig=Fa
 
     stack_img.append(Image.fromarray(cam_img))
 
-    total_width = sum([cam_img.shape[0],raw_img.shape[0]])
-    max_height = max([cam_img.shape[1],raw_img.shape[1]])
+    #total_width = sum([cam_img.shape[0],raw_img.shape[0]])
+    #max_height = max([cam_img.shape[1],raw_img.shape[1]])
 
-    new_im = Image.new('RGB', (total_width, max_height))
+    #new_im = Image.new('RGB', (total_width, max_height))
 
-    x_offset = 0
-    for im in stack_img:
-      new_im.paste(im, (x_offset,0))
-      x_offset += im.size[0]
+    #x_offset = 0
+    #for im in stack_img:
+    #  new_im.paste(im, (x_offset,0))
+    #  x_offset += im.size[0]
 
-    disp_img.append(new_im)
     
-    ax[r,c].imshow(new_im)#,interpolation='bilinear')
+    
+    ax[r,c].imshow(cam_img,interpolation='bilinear')
     ax[r,c].set_title(f" Predicted:{classes[ids_[id][0]]} Target:{classes[sample_target_class[id]]}",color='red')
     ax[r,c].axis('off')
 
