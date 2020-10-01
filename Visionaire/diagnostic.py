@@ -109,15 +109,17 @@ def incorrect_Classification(model,classes,test_loader,device, savefig = False, 
   
 def plot_performace(train_acc,test_acc,train_losses,test_losses,savefig = False, *save_dir):
 
-    fig, axs = plt.subplots(2,2,figsize=(10,10))
-    axs[0, 0].plot(train_losses)
-    axs[0, 0].set_title("Training Loss",color='red')
-    axs[1, 0].plot(train_acc)
-    axs[1, 0].set_title("Training Accuracy",color='red')
-    axs[0, 1].plot(test_losses)
-    axs[0, 1].set_title("Test Loss",color='red')
-    axs[1, 1].plot(test_acc)
-    axs[1, 1].set_title("Test Accuracy",color='red')
+    fig, axs = plt.subplots(1,2,figsize=(10,5))
+    axs[0].plot(train_losses,label = "Train")
+    axs[0].plot(test_losses,label = "Test")
+    axs[0].legend()
+    axs[0].set_title("Loss curve",color='red')
+
+    axs[1].plot(train_acc,label = "Train")
+    axs[1].plot(test_acc,label = "Test")
+    axs[1].set_title("Accuracy curve",color='red')
+    axs[1].legend()
+    
     plt.tight_layout()
     
     if savefig:
