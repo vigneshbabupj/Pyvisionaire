@@ -327,7 +327,7 @@ def plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig=Fa
     
     
     ax[r,c].imshow(cam_img,interpolation='bilinear')
-    ax[r,c].set_title(f" Predicted:{classes[ids_[id][0]]} Target:{classes[ids_[id][0]]}",color='red')
+    ax[r,c].set_title(f" Predicted:{classes[sample_target_class[id]]} Target:{classes[ids_[id][0]]}",color='red')
     ax[r,c].axis('off')
 
     c+=1
