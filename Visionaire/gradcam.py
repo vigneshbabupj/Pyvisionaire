@@ -222,7 +222,7 @@ def plot_grad_cam_all_layers(model,classes,test_loader,device,num_img,savefig=Fa
 
     raw_img = np.transpose(raw_images[id].cpu().numpy(), (1, 2, 0)).squeeze()
     ax[id,0].imshow(raw_img)
-    ax[id,0].set_title(f" Predicted:{classes[sample_pred[id]]} \n Target:{classes[ids_[id][0]}",color='red')
+    ax[id,0].set_title(f" Predicted:{classes[sample_pred[id]]} \n Target:{classes[ids_[id][0]]}",color='red')
     ax[id,0].axis('off')
 
     disp_img.append(raw_img)
