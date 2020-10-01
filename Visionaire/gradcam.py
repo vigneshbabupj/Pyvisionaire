@@ -140,7 +140,7 @@ def show_cam_on_image(img, mask):
 
     #print(img.size)
     #print(heatmap_img.size)
-    superimposed_img = cv2.addWeighted(img, 0.8, heatmap_img, 0.3, 128)
+    superimposed_img = cv2.addWeighted(img, 0.8, heatmap_img, 0.3, 0)
     # plt.imshow(superimposed_img)
     # plt.show()
     return superimposed_img
