@@ -140,7 +140,7 @@ def show_cam_on_image(img, mask):
 
     #print(img.size)
     #print(heatmap_img.size)
-    superimposed_img = cv2.addWeighted(img, 0.8, heatmap_img, 0.4, 0)
+    superimposed_img = cv2.addWeighted(img, 0.8, heatmap_img, 0.3, 128)
     # plt.imshow(superimposed_img)
     # plt.show()
     return superimposed_img
@@ -327,7 +327,7 @@ def plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig=Fa
     
     
     ax[r,c].imshow(cam_img,interpolation='bilinear')
-    ax[r,c].set_title(f" Predicted:{classes[ids_[id][0]]} Target:{classes[sample_target_class[id]]}",color='red')
+    ax[r,c].set_title(f" Predicted:{classes[ids_[id][0]]} Target:{classes[ids_[id][0]]}",color='red')
     ax[r,c].axis('off')
 
     c+=1
