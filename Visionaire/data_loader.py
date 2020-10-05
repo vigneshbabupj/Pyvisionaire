@@ -15,21 +15,14 @@ import albumentations as A
 #from albumentations.pytorch import ToTensorV2
 from albumentations.pytorch.transforms import ToTensor
 
+from Visionaire import data_albumentations as aug
 
 
-class AlbumentationImageDataset():
-  def __init__(self,transform):
-      #self.image_list = image_list
-      self.aug = transform
+def MNIST_dataloader(Batch_size, use_cuda ):
 
-  def __call__(self, img):
-    img = np.array(img)
-
-    return self.aug(image=img)['image']
-        
-
-
-def MNIST_dataloader(Batch_size, use_cuda):
+    data_transforms = aug.MNIST_Albumentation()
+    
+    '''
     
     mean =0.1307
     std = 0.3081
@@ -61,7 +54,7 @@ def MNIST_dataloader(Batch_size, use_cuda):
                                       mean=mean,
                                       std=std,
                                       ),
-                                  #ToTensorV2()
+                                  ToTensorV2()
                                   ToTensor()
                                   ])
 
@@ -72,16 +65,20 @@ def MNIST_dataloader(Batch_size, use_cuda):
     #                                      transforms.ToTensor(),
     #                                      transforms.Normalize((0.1307,), (0.3081,))
     #                                      ])
+    
+    '''
 
 
     #Get the MNIST dataset
 
     train_dataset =  datasets.MNIST('/data/', train=True, download=True,
-                              transform=AlbumentationImageDataset(train_transforms))
+                              transform= data_transforms(is_train = True) #AlbumentationImageDataset(train_transforms)
+                              )
 
 
     test_dataset =  datasets.MNIST('/data/', train=False, download=True,
-                              transform=AlbumentationImageDataset(test_transforms)) 
+                              transform= data_transforms(is_train = False) #AlbumentationImageDataset(test_transforms)
+                              )
 
 
     dataloader_args= dict(shuffle=True, batch_size=Batch_size,num_workers=4, pin_memory=True ) if use_cuda else dict(shuffle=True, batch_size=Batch_size)
@@ -90,13 +87,17 @@ def MNIST_dataloader(Batch_size, use_cuda):
 
     test_loader = torch.utils.data.DataLoader(test_dataset, **dataloader_args)
 
-
     return train_loader,test_loader
 
 def CIFAR10_dataloader(Batch_size, use_cuda):
 
-    mean = [0.4890062, 0.47970363, 0.47680542]
-    std = [0.264582, 0.258996, 0.25643882]
+    #data_transforms = aug.CIFAR10_Albumentation()
+    data_transforms = aug.CIFAR10_A11_transformation() #assignment 11 tranformations
+    
+    '''
+
+    # mean = [0.4890062, 0.47970363, 0.47680542]
+    # std = [0.264582, 0.258996, 0.25643882]
 
 
 
@@ -147,16 +148,20 @@ def CIFAR10_dataloader(Batch_size, use_cuda):
                                   #ToTensorV2()
                                   ToTensor()
                                   ])
+                                  
+    '''
 
 
     #Get the CIFAR10 dataset
 
     train_dataset =  datasets.CIFAR10('/data/', train=True, download=True,
-                              transform=AlbumentationImageDataset(train_transforms))
+                              transform= data_transforms(is_train = True) #AlbumentationImageDataset(train_transforms)
+                              )
 
 
     test_dataset =  datasets.CIFAR10('/data/', train=False, download=True,
-                              transform=AlbumentationImageDataset(test_transforms))
+                              transform= data_transforms(is_train = False) #AlbumentationImageDataset(test_transforms)
+                              )
 
 
     dataloader_args= dict(shuffle=True, batch_size=Batch_size,num_workers=4, pin_memory=True ) if use_cuda else dict(shuffle=True, batch_size=Batch_size)
