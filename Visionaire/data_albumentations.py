@@ -61,7 +61,7 @@ class CIFAR10_Albumentation():
                                       mean = self.mean,
                                       std= self.std,
                                       ),
-                                  A.Cutout ( num_holes=1, max_h_size=16, max_w_size=16,  fill_value= mean, always_apply=False, p=0.5),
+                                  A.Cutout ( num_holes=1, max_h_size=16, max_w_size=16,  fill_value= self.mean, always_apply=False, p=0.5),
                                   ToTensorV2()
                                   #ToTensor()
                                   ])
@@ -95,7 +95,7 @@ class CIFAR10_A11_transformation():
                                   A.PadIfNeeded(min_height=40, min_width=40),
                                   A.RandomCrop(height=32, width=32, always_apply=True),
                                   A.HorizontalFlip(p=0.5),
-                                  A.Cutout( num_holes=1, max_h_size=8, max_w_size=8, fill_value= mean, always_apply=False, p=0.5),
+                                  A.Cutout( num_holes=1, max_h_size=8, max_w_size=8, fill_value= self.mean, always_apply=False, p=0.5),
                                   
                                   A.Normalize( mean = self.mean, std= self.std,),                                  
                                   ToTensorV2()
