@@ -1,7 +1,5 @@
 
 
-
-
 from torch_lr_finder import LRFinder
 
 

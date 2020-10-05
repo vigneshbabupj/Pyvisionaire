@@ -5,6 +5,7 @@ from albumentations.pytorch import ToTensorV2
 #from albumentations.pytorch.transforms import ToTensor
 
 from torchvision import datasets, transforms
+import numpy as np
 
 
 class AlbumentationImageDataset():
