@@ -93,7 +93,7 @@ class CIFAR10_A11_transformation():
 
       self.train_transforms = A.Compose([
       
-                                  A.PadIfNeeded(min_height=40, min_width=40),
+                                  A.PadIfNeeded(min_height=40, min_width=40, always_apply=True),
                                   A.RandomCrop(height=32, width=32, always_apply=True),
                                   A.HorizontalFlip(p=0.5),
                                   A.Cutout( num_holes=1, max_h_size=8, max_w_size=8, fill_value= self.mean, always_apply=False, p=0.5),
