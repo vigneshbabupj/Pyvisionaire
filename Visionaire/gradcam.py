@@ -145,6 +145,7 @@ def show_cam_on_image(img, mask):
     # plt.show()
     return superimposed_img
 
+'''
 def plot_grad_cam_all_layers(model,classes,test_loader,device,num_img,savefig=False,*save_dir):
 
   """
@@ -242,10 +243,10 @@ def plot_grad_cam_all_layers(model,classes,test_loader,device,num_img,savefig=Fa
     plt.savefig(save_dir[0]+'grad_cam_image.jpg', dpi=300, bbox_inches='tight')
   plt.show()
   
-  
+'''
  
 
-def plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig=False,*save_dir):
+def plot_grad_cam(model,classes,test_loader,device,num_img,savefig=False,*save_dir):
 
   """
   Generate Grad-CAM at final layers of model
@@ -342,10 +343,11 @@ def plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig=Fa
   plt.show()
   
   
-  
+'''
 def plot_grad_cam(model,classes,test_loader,device,num_img,savefig=False,*save_dir):
   # if no of images is less than 5 print grad came for all layers else only last layer
   if num_img > 5:
     plot_grad_cam_last_layer(model,classes,test_loader,device,num_img,savefig,save_dir[0])
   else:
     plot_grad_cam_all_layers(model,classes,test_loader,device,num_img,savefig,save_dir[0])
+'''
