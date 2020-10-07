@@ -4,7 +4,7 @@ from torch_lr_finder import LRFinder
 
 
 
-def findLR(model,criterion, optimizer,trainloader,num_iteration):
+def findLR(model,train_loader,test_loader,criterion, optimizer,num_iteration):
 
     lr_finder = LRFinder(model, optimizer, criterion, device="cuda")
     #lr_finder.range_test(trainloader, end_lr=100, num_iter=100) # fast ai method
