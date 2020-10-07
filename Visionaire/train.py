@@ -20,7 +20,7 @@ import torch.optim as optim
 from Visionaire import regularization as rg
 
 
-def train(model, device, train_loader, optimizer, lambda_l1,criterion):
+def train(model, device, train_loader, optimizer,scheduler,lambda_l1,criterion):
   model.train()
   pbar=tqdm(train_loader)
   correct = 0
@@ -54,6 +54,8 @@ def train(model, device, train_loader, optimizer, lambda_l1,criterion):
     
     train_losses.append(loss.item())
     train_acc.append(100*correct/processed)
+    
+    scheduler.step()
 
   return train_acc, train_losses
 
