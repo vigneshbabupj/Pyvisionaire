@@ -4,9 +4,15 @@ from torch_lr_finder import LRFinder
 
 
 
-def findLR(model,criterion, optimizer,trainloader):
+def findLR(model,criterion, optimizer,trainloader,num_iter):
 
     lr_finder = LRFinder(model, optimizer, criterion, device="cuda")
-    lr_finder.range_test(trainloader, end_lr=100, num_iter=100)
-    lr_finder.plot() # to inspect the loss-learning rate graph
-    lr_finder.reset() # to reset the model and optimizer to their initial state
+    #lr_finder.range_test(trainloader, end_lr=100, num_iter=100) # fast ai method
+    lr_finder.range_test(train_loader, val_loader=test_loader, end_lr=1, num_iter, step_mode="linear")
+    lr_finder.plot(log_lr=False)
+    lr_finder.reset()
+    
+    best_lr = lr_finder.history['lr'][lr_finder.history['loss'].index(lr_finder.best_loss)]
+
+
+    return best_lr
