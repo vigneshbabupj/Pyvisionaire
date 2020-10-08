@@ -73,7 +73,7 @@ class trainer:
     # Lr range test
     self.best_lr = findLR(self.model,self.train_loader,self.test_loader,self.criterion, self.optimizer,num_iteration = len(self.train_loader)*self.epochs)
     print("Best lr :",self.best_lr)
-    self.min_lr = self.best_lr/5
+    self.min_lr = self.best_lr/8
 
   def run(self):
     
