@@ -81,8 +81,12 @@ class trainer:
     
     #scheduler
     self.scheduler_module = getattr(optim.lr_scheduler,self.scheduler_dict['name'])
-    self.scheduler = self.scheduler_module (self.optimizer,max_lr=self.best_lr, steps_per_epoch=len(self.train_loader), epochs=self.epochs,pct_start=self.scheduler_dict['pct_start'])
+    #self.scheduler = self.scheduler_module (self.optimizer,max_lr=self.best_lr, steps_per_epoch=len(self.train_loader), epochs=self.epochs,pct_start=self.scheduler_dict['pct_start'])
+    
+    self.scheduler = self.scheduler_module (self.optimizer,base_lr =self.min_lr, max_lr=self.best_lr, step_size_up  = ((self.scheduler_dict['max_at_epoch']) * (len(self.train_loader)))
+                                            ,step_size_down = ((self.epochs - (self.scheduler_dict['max_at_epoch'])) * (len(self.train_loader))) )
 
+    
     self.train_losses = []
     self.test_losses = []
     self.train_accuracy = []
