@@ -25,10 +25,7 @@ class trainer:
     self.L2_regularizer_lambda = params['L2_regularizer_lambda']
     self.optimizer_dict = params['optimizer']
     self.scheduler_dict = params['scheduler']
-  
-
-  def run(self):
-
+    
     # CUDA for PyTorch
     self.use_cuda = torch.cuda.is_available()
     self.device = torch.device("cuda" if self.use_cuda else "cpu")
@@ -39,13 +36,8 @@ class trainer:
     torch.manual_seed(self.seed)
 
     print("Using Cuda : ", self.use_cuda)
-
-
-    # Data loader
-    print('Data Loader : ')
-    self.data_loader = getattr(data_loader, self.data)
-    self.train_loader,self.test_loader, self.classes = self.data_loader(self.Batch_Size,self.use_cuda)
-
+    
+    
     # Model
     if self.model_type == 'EVA':
       self.model_class = getattr(EVA_models, self.model_name)
@@ -63,11 +55,25 @@ class trainer:
     self.optim_module = getattr(optim,self.optimizer_dict['name'])
     self.optimizer = self.optim_module(self.model.parameters(),self.optimizer_dict['lr'],self.optimizer_dict['momentum'],self.L2_regularizer_lambda)
 
+
+  def load_data(self):
+  
+    # Data loader
+    print('Data Loader : ')
+    self.data_loader = getattr(data_loader, self.data)
+    self.train_loader,self.test_loader, self.classes = self.data_loader(self.Batch_Size,self.use_cuda)
+  
+  def find_lr(self):
+  
     # Lr range test
     self.best_lr = findLR(self.model,self.train_loader,self.test_loader,self.criterion, self.optimizer,num_iteration = len(self.train_loader)*self.epochs)
     print("Best lr :",self.best_lr)
     self.min_lr = self.best_lr/5
 
+  def run(self):
+    
+    self.optimizer = self.optim_module(self.model.parameters(),self.min_lr,self.optimizer_dict['momentum'],self.L2_regularizer_lambda)
+    
     #scheduler
     self.scheduler_module = getattr(optim.lr_scheduler,self.scheduler_dict['name'])
     self.scheduler = self.scheduler_module (self.optimizer,max_lr=self.best_lr, steps_per_epoch=len(self.train_loader), epochs=self.epochs,pct_start=self.scheduler_dict['pct_start'])
