@@ -1,4 +1,5 @@
 import Visionaire
+from Visionaire import data_albumentations
 from Visionaire import data_loader #import CIFAR10_dataloader
 from Visionaire import models
 from Visionaire import EVA_models
@@ -12,9 +13,13 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.optim.lr_scheduler import *
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 class trainer:
   def __init__(self,params):
+    self.transform = params['Image_Augmentation']
     self.data = params['data']
     self.model_name = params['model']
     self.model_type = params['model_type']
@@ -56,12 +61,12 @@ class trainer:
     self.optimizer = self.optim_module(self.model.parameters(),self.optimizer_dict['lr'],self.optimizer_dict['momentum'],self.L2_regularizer_lambda)
 
 
-  def load_data(self):
-  
+  def load_data(self): 
+    
     # Data loader
     print('Data Loader : ')
     self.data_loader = getattr(data_loader, self.data)
-    self.train_loader,self.test_loader, self.classes = self.data_loader(self.Batch_Size,self.use_cuda)
+    self.train_loader,self.test_loader, self.classes = self.data_loader(self.Batch_Size,self.use_cuda,self.transform)
   
   def find_lr(self):
   
@@ -82,6 +87,7 @@ class trainer:
     self.test_losses = []
     self.train_accuracy = []
     self.test_accuracy = []
+    self.lr_list=[]
 
     for epoch in range(self.epochs):
         print("EPOCH:", epoch)
@@ -94,10 +100,19 @@ class trainer:
         self.test_accuracy.append(self.test_acc)
 
         print("Learning Rate : ",self.optimizer.param_groups[0]['lr'])
+        self.lr_list.append(self.optimizer.param_groups[0]['lr'])
 
 
   def plot_model_performance(self,save_plot=False,*save_dir):
     plot_performace(self.train_accuracy,self.test_accuracy,self.train_losses,self.test_losses,save_plot,save_dir)
+  
+  def plot_lr(self):
+    plt.plot(self.lr_list)
+    plt.title("Lr change in Epochs")
+    plt.xlabel('Epochs')
+    plt.ylabel('Learning Rate')
+    plt.show()
+    
 
   def grad_cam(self,save_plot=False,*save_dir):
     plot_grad_cam(self.model,self.classes,self.test_loader,self.device,save_plot,save_dir)

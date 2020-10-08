@@ -89,10 +89,14 @@ def MNIST_dataloader(Batch_size, use_cuda ):
 
     return train_loader,test_loader
 
-def CIFAR10_dataloader(Batch_size, use_cuda):
+def CIFAR10_dataloader(Batch_size, use_cuda,aug_name):
 
+    
+    data_preprocess = getattr(aug, aug_name)
+    data_transforms = data_preprocess()
+    
     #data_transforms = aug.CIFAR10_Albumentation()
-    data_transforms = aug.CIFAR10_A11_transformation() #assignment 11 tranformations
+    #data_transforms = aug.CIFAR10_A11_transformation() #assignment 11 tranformations
     
     '''
 
