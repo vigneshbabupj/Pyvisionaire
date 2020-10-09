@@ -73,21 +73,24 @@ class trainer:
     # Lr range test
     self.best_lr = findLR(self.model,self.train_loader,self.test_loader,self.criterion, self.optimizer,num_iteration = len(self.train_loader)*self.epochs)
     print("Best lr :",self.best_lr)
-    self.min_lr = self.best_lr/5
+    self.min_lr = self.best_lr/10
 
-  def run(self,lr):
+  def run(self):
     
-    self.best_lr = lr
-    self.min_lr = self.best_lr/5
+    #self.best_lr = lr
+    #self.min_lr = self.best_lr/10
     
-    self.optimizer = self.optim_module(self.model.parameters(),self.min_lr,self.optimizer_dict['momentum'],self.L2_regularizer_lambda)
+    #self.optimizer = self.optim_module(self.model.parameters(),self.min_lr,self.optimizer_dict['momentum'],self.L2_regularizer_lambda)
     
     #scheduler
-    self.scheduler_module = getattr(optim.lr_scheduler,self.scheduler_dict['name'])
-    #self.scheduler = self.scheduler_module (self.optimizer,max_lr=self.best_lr, steps_per_epoch=len(self.train_loader), epochs=self.epochs,pct_start=self.scheduler_dict['pct_start'])
     
-    self.scheduler = self.scheduler_module (self.optimizer,base_lr =self.min_lr, max_lr=self.best_lr, step_size_up  = ((self.scheduler_dict['max_at_epoch']) * (len(self.train_loader)))
-                                             ,step_size_down = ((self.epochs - (self.scheduler_dict['max_at_epoch'])) * (len(self.train_loader))) )
+    pct_start_val =  (((self.scheduler_dict['max_at_epoch']) * (len(self.train_loader))) / ((self.epochs) * (len(self.train_loader))) )
+    
+    self.scheduler_module = getattr(optim.lr_scheduler,self.scheduler_dict['name'])
+    self.scheduler = self.scheduler_module (self.optimizer,max_lr=self.best_lr, steps_per_epoch=len(self.train_loader), epochs=self.epochs,pct_start=pct_start_val,anneal_strategy='linear',div_factor=5 ,final_div_factor=5)
+    
+    #self.scheduler = self.scheduler_module (self.optimizer,base_lr =self.min_lr, max_lr=self.best_lr, step_size_up  = ((self.scheduler_dict['max_at_epoch']) * (len(self.train_loader)))
+    #                                         ,step_size_down = ((self.epochs - (self.scheduler_dict['max_at_epoch'])) * (len(self.train_loader))) )
 
     
     self.train_losses = []
