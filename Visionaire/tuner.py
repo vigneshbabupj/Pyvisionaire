@@ -10,8 +10,8 @@ def findLR(model,train_loader,test_loader,criterion, optimizer,num_iteration):
     #model, optimizer = amp.initialize(model, optimizer, opt_level='O1')
 
     lr_finder = LRFinder(model, optimizer, criterion, device="cuda")
-    #lr_finder.range_test(train_loader, end_lr=1, num_iter=num_iteration) # fast ai method
-    lr_finder.range_test(train_loader, val_loader=test_loader, end_lr=10, num_iter = num_iteration, step_mode="linear")
+    lr_finder.range_test(train_loader, end_lr=1, num_iter=num_iteration) # fast ai method
+    #lr_finder.range_test(train_loader, val_loader=test_loader, end_lr=10, num_iter = num_iteration, step_mode="linear")
     lr_finder.plot(log_lr=False)
     lr_finder.reset()
     
