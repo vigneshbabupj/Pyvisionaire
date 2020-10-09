@@ -1,13 +1,13 @@
 
 
 from torch_lr_finder import LRFinder
-from apex import amp
+#from apex import amp
 
 
 def findLR(model,train_loader,test_loader,criterion, optimizer,num_iteration):
 
     # Add this line before running `LRFinder`
-    model, optimizer = amp.initialize(model, optimizer, opt_level='O1')
+    #model, optimizer = amp.initialize(model, optimizer, opt_level='O1')
 
     lr_finder = LRFinder(model, optimizer, criterion, device="cuda")
     #lr_finder.range_test(trainloader, end_lr=100, num_iter=100) # fast ai method
