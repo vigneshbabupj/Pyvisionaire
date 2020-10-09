@@ -77,7 +77,7 @@ class trainer:
 
   def run(self):
     
-    self.optimizer = self.optim_module(self.model.parameters(),self.min_lr,self.optimizer_dict['momentum'],self.L2_regularizer_lambda)
+    #self.optimizer = self.optim_module(self.model.parameters(),self.min_lr,self.optimizer_dict['momentum'],self.L2_regularizer_lambda)
     
     #scheduler
     self.scheduler_module = getattr(optim.lr_scheduler,self.scheduler_dict['name'])
