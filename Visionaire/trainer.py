@@ -75,7 +75,10 @@ class trainer:
     print("Best lr :",self.best_lr)
     self.min_lr = self.best_lr/5
 
-  def run(self):
+  def run(self,lr):
+    
+    self.best_lr = lr
+    self.min_lr = self.best_lr/5
     
     self.optimizer = self.optim_module(self.model.parameters(),self.min_lr,self.optimizer_dict['momentum'],self.L2_regularizer_lambda)
     
