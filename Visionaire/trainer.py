@@ -87,7 +87,7 @@ class trainer:
     pct_start_val =  (((self.scheduler_dict['max_at_epoch']) * (len(self.train_loader))) / ((self.epochs) * (len(self.train_loader))) )
     
     self.scheduler_module = getattr(optim.lr_scheduler,self.scheduler_dict['name'])
-    self.scheduler = self.scheduler_module(self.optimizer,max_lr=self.best_lr,total_steps = len(self.train_loader) *self.epochs , steps_per_epoch=len(self.train_loader), epochs=self.epochs,pct_start=pct_start_val,anneal_strategy='linear',div_factor=10 ,final_div_factor=10)
+    self.scheduler = self.scheduler_module(self.optimizer,max_lr=self.best_lr,total_steps = len(self.train_loader) *self.epochs , steps_per_epoch=len(self.train_loader), epochs=self.epochs,pct_start=pct_start_val,anneal_strategy='cos',div_factor=10 ,final_div_factor=10)
     
     #self.scheduler = self.scheduler_module (self.optimizer,base_lr =self.min_lr, max_lr=self.best_lr, step_size_up  = ((self.scheduler_dict['max_at_epoch']) * (len(self.train_loader)))
     #                                         ,step_size_down = ((self.epochs - (self.scheduler_dict['max_at_epoch'])) * (len(self.train_loader))) )
