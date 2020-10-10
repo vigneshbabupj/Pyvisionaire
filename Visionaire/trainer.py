@@ -127,7 +127,7 @@ class trainer:
     
 
   def grad_cam(self,save_plot=False,*save_dir):
-    plot_grad_cam(self.model,self.classes,self.test_loader,self.device,save_plot,save_dir)
+    plot_grad_cam(self.model,self.classes,self.test_loader,self.device,num_img=25,save_plot,save_dir)
 
 
   def misclassified_images(self,save_plot=False,*save_dir):
