@@ -15,6 +15,7 @@ import torch.optim as optim
 from torch.optim.lr_scheduler import *
 import matplotlib.pyplot as plt
 import numpy as np
+from torchsummary import summary
 
 
 class trainer:
@@ -67,6 +68,11 @@ class trainer:
     print('Data Loader : ')
     self.data_loader = getattr(data_loader, self.data)
     self.train_loader,self.test_loader, self.classes = self.data_loader(self.Batch_Size,self.use_cuda,self.transform)
+  
+  def model_summary(self,input_size):
+    model = self.model().to(device)
+    print(summary(my_trainer.model, input_size=input_size))
+    
   
   def find_lr(self):
   

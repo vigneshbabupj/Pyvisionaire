@@ -10,6 +10,7 @@ Original file is located at
 import torch 
 from torchvision import datasets, transforms
 import numpy as np
+import os
 
 import albumentations as A
 #from albumentations.pytorch import ToTensorV2
@@ -176,6 +177,57 @@ def CIFAR10_dataloader(Batch_size, use_cuda,aug_name):
 
     classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+
+
+    return train_loader,test_loader, classes
+
+
+
+def TinyImagenet_dataloader(Batch_size, use_cuda,aug_name):
+
+    data_preprocess = getattr(aug, aug_name)
+    data_transforms = data_preprocess()
+
+    data_dir ='S12_Assignment_A/tiny-imagenet-200/'
+
+
+    def get_id_dictionary():
+	    id_dict = {}
+	    for i, line in enumerate(open( data_dir + 'wnids.txt', 'r')):
+	        id_dict[line.replace('\n', '')] = i
+	    return id_dict
+  
+	def get_class_to_id_dict():
+	    id_dict = get_id_dictionary()
+	    all_classes = {}
+	    result = {}
+	    for i, line in enumerate(open( data_dir + 'words.txt', 'r')):
+	        n_id, word = line.split('\t')[:2]
+	        all_classes[n_id] = word
+	    for key, value in id_dict.items():
+	        result[value] = (key, all_classes[key])      
+	    return result
+
+    
+    #Get the TinyImagenet dataset 
+
+    train_dataset =  datasets.ImageFolder(os.path.join(data_dir, 'train'), train=True, download=True,
+                              transform= data_transforms(is_train = True) #AlbumentationImageDataset(train_transforms)
+                              )
+
+
+    test_dataset =  datasets.ImageFolder(os.path.join(data_dir, 'val'), train=False, download=True,
+                              transform= data_transforms(is_train = False) #AlbumentationImageDataset(test_transforms)
+                              )
+
+
+    dataloader_args= dict(shuffle=True, batch_size=Batch_size,num_workers=4, pin_memory=True ) if use_cuda else dict(shuffle=True, batch_size=Batch_size)
+
+    train_loader = torch.utils.data.DataLoader(train_dataset, **dataloader_args)
+
+    test_loader = torch.utils.data.DataLoader(test_dataset, **dataloader_args)
+
+    classes = get_class_to_id_dict()
 
 
     return train_loader,test_loader, classes

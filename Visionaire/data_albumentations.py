@@ -116,3 +116,36 @@ class CIFAR10_A11_transformation():
     else:
         return AlbumentationImageDataset(self.test_transforms)
         
+
+
+class TinyImagenet_Albumentation():
+  def __init__(self):
+      self.mean = [0.485, 0.456, 0.406]
+      self.std = [0.229, 0.224, 0.225]
+
+      self.train_transforms = A.Compose([
+                                  #A.HorizontalFlip(p=0.5),
+                                  A.Normalize(
+                                      mean = self.mean,
+                                      std= self.std,
+                                      ),
+                                  #A.Cutout ( num_holes=1, max_h_size=16, max_w_size=16,  fill_value= self.mean, always_apply=False, p=0.5),
+                                  ToTensorV2()
+                                  #ToTensor()
+                                  ])
+                                  
+      self.test_transforms = A.Compose([
+
+                                  A.Normalize(
+                                      mean = self.mean,
+                                      std = self.std,
+                                      ),
+                                  ToTensorV2()
+                                  #ToTensor()
+                                  ])
+
+  def __call__(self,is_train):
+    if is_train == True:
+        return AlbumentationImageDataset(self.train_transforms)
+    else:
+        return AlbumentationImageDataset(self.test_transforms)
