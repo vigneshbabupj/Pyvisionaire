@@ -183,7 +183,7 @@ def CIFAR10_dataloader(Batch_size, use_cuda,aug_name):
 
 
 
-def get_id_dictionary():
+def get_id_dictionary(data_dir):
 	
     id_dict = {}
     for i, line in enumerate(open( data_dir + 'wnids.txt', 'r')):
@@ -191,8 +191,8 @@ def get_id_dictionary():
 
     return id_dict
 
-def get_class_to_id_dict():
-    id_dict = get_id_dictionary()
+def get_class_to_id_dict(data_dir):
+    id_dict = get_id_dictionary(data_dir)
     all_classes = {}
     result = {}
     for i, line in enumerate(open( data_dir + 'words.txt', 'r')):
@@ -208,22 +208,22 @@ def TinyImagenet_dataloader(Batch_size, use_cuda,aug_name):
     data_preprocess = getattr(aug, aug_name)
     data_transforms = data_preprocess()
 
-    data_dir ='S12_Assignment_A/tiny-imagenet-200'
-    train_path = os.path.join(data_dir, 'train')
-    test_path = os.path.join(data_dir, 'val')
+    data_dir ='S12_Assignment_A/tiny-imagenet-200/'
+    train_path = os.path.join(data_dir, 'train','')
+    test_path = os.path.join(data_dir, 'val','')
 
     #Get the TinyImagenet dataset
     train_dataset =  datasets.ImageFolder(train_path, transform= data_transforms(is_train = True) )
-    
+
     test_dataset =  datasets.ImageFolder(test_path,transform= data_transforms(is_train = False) )
-    
+
     dataloader_args= dict(shuffle=True, batch_size=Batch_size,num_workers=4, pin_memory=True ) if use_cuda else dict(shuffle=True, batch_size=Batch_size)
 
     train_loader = torch.utils.data.DataLoader(train_dataset, **dataloader_args)
 
     test_loader = torch.utils.data.DataLoader(test_dataset, **dataloader_args)
 
-    classes = get_class_to_id_dict()
+    classes = get_class_to_id_dict(data_dir)
 
 
     return train_loader,test_loader, classes
