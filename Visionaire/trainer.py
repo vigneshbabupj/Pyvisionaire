@@ -70,8 +70,7 @@ class trainer:
     self.train_loader,self.test_loader, self.classes = self.data_loader(self.Batch_Size,self.use_cuda,self.transform)
   
   def model_summary(self,input_size):
-    model = self.model().to(self.device)
-    print(summary(model, input_size=input_size))
+    print(summary(self.model, input_size=input_size))
     
   
   def find_lr(self):
