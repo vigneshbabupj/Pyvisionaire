@@ -71,7 +71,7 @@ class trainer:
   
   def model_summary(self,input_size):
     model = self.model().to(self.device)
-    print(summary(my_trainer.model, input_size=input_size))
+    print(summary(model, input_size=input_size))
     
   
   def find_lr(self):
