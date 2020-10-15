@@ -212,14 +212,11 @@ def TinyImagenet_dataloader(Batch_size, use_cuda,aug_name):
     train_path = os.path.join(data_dir, 'train')
     test_path = os.path.join(data_dir, 'val')
 
-    #Get the TinyImagenet dataset 
-
+    #Get the TinyImagenet dataset
     train_dataset =  datasets.ImageFolder(train_path, transform= data_transforms(is_train = True) )
-
-
+    
     test_dataset =  datasets.ImageFolder(test_path,transform= data_transforms(is_train = False) )
-
-
+    
     dataloader_args= dict(shuffle=True, batch_size=Batch_size,num_workers=4, pin_memory=True ) if use_cuda else dict(shuffle=True, batch_size=Batch_size)
 
     train_loader = torch.utils.data.DataLoader(train_dataset, **dataloader_args)
