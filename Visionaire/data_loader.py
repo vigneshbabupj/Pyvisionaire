@@ -209,9 +209,7 @@ def TinyImagenet_dataloader(Batch_size, use_cuda,aug_name):
     data_transforms = data_preprocess()
 
     data_dir ="S12_Assignment_A/tiny-imagenet-200/"
-
-
-	   
+    
     #Get the TinyImagenet dataset 
 
     train_dataset =  datasets.ImageFolder(os.path.join(data_dir, 'train'), train=True, download=True,
