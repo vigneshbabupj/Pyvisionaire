@@ -208,16 +208,16 @@ def TinyImagenet_dataloader(Batch_size, use_cuda,aug_name):
     data_preprocess = getattr(aug, aug_name)
     data_transforms = data_preprocess()
 
-    data_dir ="S12_Assignment_A/tiny-imagenet-200/"
-    
+    data_dir ='S12_Assignment_A/tiny-imagenet-200'
+
     #Get the TinyImagenet dataset 
 
-    train_dataset =  datasets.ImageFolder(os.path.join(data_dir, 'train'), train=True, download=True,
+    train_dataset =  datasets.ImageFolder((os.path.join(data_dir, 'train')), train=True, download=True,
                               transform= data_transforms(is_train = True) #AlbumentationImageDataset(train_transforms)
                               )
 
 
-    test_dataset =  datasets.ImageFolder(os.path.join(data_dir, 'val'), train=False, download=True,
+    test_dataset =  datasets.ImageFolder((os.path.join(data_dir, 'val')), train=False, download=True,
                               transform= data_transforms(is_train = False) #AlbumentationImageDataset(test_transforms)
                               )
 
