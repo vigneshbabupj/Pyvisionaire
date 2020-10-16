@@ -221,7 +221,7 @@ def get_id_dictionary(path):
     return id_dict
   
 def get_class_to_id_dict(path):
-    id_dict = get_id_dictionary()
+    id_dict = get_id_dictionary(path)
     all_classes = {}
     result = {}
     for i, line in enumerate(open( path + 'words.txt', 'r')):
@@ -231,8 +231,9 @@ def get_class_to_id_dict(path):
         result[value] = (key, all_classes[key])      
     return result
 
-def get_data(path,id_dict):
+def get_data(path):
     print('starting loading data')
+    id_dict = get_id_dictionary(path)
     train_data, test_data = [], []
     train_labels, test_labels = [], []
     t = time.time()
@@ -261,8 +262,7 @@ def TinyImagenet_dataloader(Batch_size, use_cuda,aug_name):
 
     data_dir ='S12_Assignment_A/tiny-imagenet-200/'
 
-    train_data, train_labels, test_data, test_labels = get_data(data_dir,get_id_dictionary())
-
+    train_data, train_labels, test_data, test_labels = get_data(data_dir)
 
     #Get the TinyImagenet dataset
     train_dataset =  MyCustomDataset(train_data, train_labels, transforms=data_transforms(is_train = True))
