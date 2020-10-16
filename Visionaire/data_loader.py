@@ -18,6 +18,12 @@ from albumentations.pytorch.transforms import ToTensor
 
 from Visionaire import data_albumentations as aug
 
+import imageio as nd
+import time
+from torch.utils.data import Dataset
+
+
+
 
 def MNIST_dataloader(Batch_size, use_cuda ):
 
@@ -183,24 +189,69 @@ def CIFAR10_dataloader(Batch_size, use_cuda,aug_name):
 
 
 
-def get_id_dictionary(data_dir):
-	
+##### Tiny Image net data loader ###
+
+# custom dataset
+class MyCustomDataset(Dataset):
+    def __init__(self, images, labels=None, transforms=None):
+        self.X = images
+        self.y = labels
+        self.transforms = transforms
+         
+    def __len__(self):
+        return (len(self.X))
+    
+    def __getitem__(self, i):
+        data = self.X[i]
+        
+        if self.transforms:
+            data = self.transforms(data)
+            
+        if self.y is not None:
+            return (data, self.y[i])
+        else:
+            return data
+
+
+
+def get_id_dictionary(path):
     id_dict = {}
-    for i, line in enumerate(open( data_dir + 'wnids.txt', 'r')):
-    	id_dict[line.replace('\n', '')] = i
-
+    for i, line in enumerate(open( path + 'wnids.txt', 'r')):
+        id_dict[line.replace('\n', '')] = i
     return id_dict
-
-def get_class_to_id_dict(data_dir):
-    id_dict = get_id_dictionary(data_dir)
+  
+def get_class_to_id_dict(path):
+    id_dict = get_id_dictionary()
     all_classes = {}
     result = {}
-    for i, line in enumerate(open( data_dir + 'words.txt', 'r')):
+    for i, line in enumerate(open( path + 'words.txt', 'r')):
         n_id, word = line.split('\t')[:2]
         all_classes[n_id] = word
     for key, value in id_dict.items():
-        result[value] = (key, all_classes[key])
+        result[value] = (key, all_classes[key])      
     return result
+
+def get_data(path,id_dict):
+    print('starting loading data')
+    train_data, test_data = [], []
+    train_labels, test_labels = [], []
+    t = time.time()
+    for key, value in id_dict.items():
+        train_data += [nd.imread( path + 'train/{}/images/{}_{}.JPEG'.format(key, key, str(i)), pilmode='RGB') for i in range(500)]
+        train_labels_ = np.array([[0]*200]*500)
+        train_labels_[:, value] = 1
+        train_labels += train_labels_.tolist()
+
+    for line in open( path + 'val/val_annotations.txt'):
+        img_name, class_id = line.split('\t')[:2]
+        test_data.append(nd.imread( path + 'val/images/{}'.format(img_name) ,pilmode='RGB'))
+        test_labels_ = np.array([[0]*200])
+        test_labels_[0, id_dict[class_id]] = 1
+        test_labels += test_labels_.tolist()
+
+    print('finished loading data, in {} seconds'.format(time.time() - t))
+    #return np.array(train_data), np.array(train_labels), np.array(test_data), np.array(test_labels)
+    return np.array(train_data), np.argmax(np.array(train_labels), axis=1), np.array(test_data), np.argmax(np.array(test_labels), axis=1)
 
 
 def TinyImagenet_dataloader(Batch_size, use_cuda,aug_name):
@@ -209,13 +260,14 @@ def TinyImagenet_dataloader(Batch_size, use_cuda,aug_name):
     data_transforms = data_preprocess()
 
     data_dir ='S12_Assignment_A/tiny-imagenet-200/'
-    train_path = os.path.join(data_dir, 'train','')
-    test_path = os.path.join(data_dir, 'val','')
+
+    train_data, train_labels, test_data, test_labels = get_data(data_dir,get_id_dictionary())
+
 
     #Get the TinyImagenet dataset
-    train_dataset =  datasets.ImageFolder(train_path, transform= data_transforms(is_train = True) )
+    train_dataset =  MyCustomDataset(train_data, train_labels, transforms=data_transforms(is_train = True))
 
-    test_dataset =  datasets.ImageFolder(test_path,transform= data_transforms(is_train = False) )
+    test_dataset =  MyCustomDataset(test_data, test_labels, transforms=data_transforms(is_train = False))
 
     dataloader_args= dict(shuffle=True, batch_size=Batch_size,num_workers=6, pin_memory=False ) if use_cuda else dict(shuffle=True, batch_size=Batch_size)
 
