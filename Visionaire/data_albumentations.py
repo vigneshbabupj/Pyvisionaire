@@ -124,12 +124,15 @@ class TinyImagenet_Albumentation():
       self.std = [0.229, 0.224, 0.225]
 
       self.train_transforms = A.Compose([
-                                  #A.HorizontalFlip(p=0.5),
+                                  
+                                  A.PadIfNeeded(min_height=80, min_width=80, always_apply=True),
+                                  A.RandomCrop(height=64, width=64, always_apply=True),
+                                  A.HorizontalFlip(p=0.5),
                                   A.Normalize(
                                       mean = self.mean,
                                       std= self.std,
                                       ),
-                                  #A.Cutout ( num_holes=1, max_h_size=16, max_w_size=16,  fill_value= self.mean, always_apply=False, p=0.5),
+                                  A.Cutout ( num_holes=1, max_h_size=16, max_w_size=16,  fill_value= self.mean, always_apply=False, p=0.5),
                                   ToTensorV2()
                                   #ToTensor()
                                   ])
