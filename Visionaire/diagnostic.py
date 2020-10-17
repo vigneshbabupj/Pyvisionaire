@@ -114,12 +114,16 @@ def plot_performace(train_acc,test_acc,train_losses,test_losses,savefig = False,
     axs[0].plot(test_losses,label = "Test")
     axs[0].legend()
     axs[0].set_title("Loss curve",color='red')
+    axs[0].set_xlabel('Epochs')
+    axs[0].set_ylabel('Loss')
 
     axs[1].plot(train_acc,label = "Train")
     axs[1].plot(test_acc,label = "Test")
     axs[1].set_title("Accuracy curve",color='red')
     axs[1].legend()
-    
+    axs[1].set_xlabel('Epochs')
+    axs[1].set_ylabel('Accuracy %')
+
     plt.tight_layout()
     
     if savefig:
